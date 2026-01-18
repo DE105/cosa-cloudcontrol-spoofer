@@ -23,6 +23,12 @@
 # FreeReflection
 -keep class me.weishu.reflection.** {*;}
 
+-dontwarn java.lang.reflect.AnnotatedType
+
+# Xposed/YukiHookAPI 入口类必须保持类名不被混淆（对应 assets/xposed_init 与 META-INF/yukihookapi_init）
+-keep class com.spoof.cosa.hook.HookEntry { *; }
+-keep class com.spoof.cosa.hook.HookEntry_YukiHookXposedInit { *; }
+
 -assumenosideeffects class kotlin.jvm.internal.Intrinsics {
     public static *** throwUninitializedProperty(...);
     public static *** throwUninitializedPropertyAccessException(...);
