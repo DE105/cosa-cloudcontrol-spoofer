@@ -27,9 +27,16 @@ class SpoofPreferences(context: Context) {
     fun setFakePrjname(value: String) {
         val normalized = value.trim()
         val editor = prefs.edit()
-        if (normalized.isEmpty()) editor.remove(SpoofConfig.prefsKeyFakePrjname)
-        else editor.putString(SpoofConfig.prefsKeyFakePrjname, normalized)
+        val legacyEditor = legacyPrefs.edit()
+        if (normalized.isEmpty()) {
+            editor.remove(SpoofConfig.prefsKeyFakePrjname)
+            legacyEditor.remove(SpoofConfig.prefsKeyFakePrjname)
+        } else {
+            editor.putString(SpoofConfig.prefsKeyFakePrjname, normalized)
+            legacyEditor.putString(SpoofConfig.prefsKeyFakePrjname, normalized)
+        }
         editor.commit()
+        legacyEditor.commit()
     }
 }
 

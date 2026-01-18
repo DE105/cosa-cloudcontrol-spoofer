@@ -13,6 +13,7 @@ class HookEntry : IYukiHookXposedInit {
 
     override fun onInit() = configs {
         isDebug = false
+        isEnableHookSharedPreferences = true
     }
 
     override fun onHook() = encase {
