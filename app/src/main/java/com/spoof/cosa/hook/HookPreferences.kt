@@ -10,13 +10,21 @@ import de.robv.android.xposed.XSharedPreferences
 internal object HookPreferences {
 
     private val prefs by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-        XSharedPreferences(BuildConfig.APPLICATION_ID, SpoofConfig.prefsName)
+        XSharedPreferences(BuildConfig.APPLICATION_ID)
+    }
+
+    private val legacyPrefs by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        XSharedPreferences(BuildConfig.APPLICATION_ID, SpoofConfig.prefsNameLegacy)
     }
 
     fun getFakePrjname(): String {
         prefs.reload()
         val value = prefs.getString(SpoofConfig.prefsKeyFakePrjname, null)?.trim().orEmpty()
-        return value.ifEmpty { SpoofConfig.defaultFakePrjname }
+        if (value.isNotEmpty()) return value
+
+        legacyPrefs.reload()
+        val legacyValue = legacyPrefs.getString(SpoofConfig.prefsKeyFakePrjname, null)?.trim().orEmpty()
+        return legacyValue.ifEmpty { SpoofConfig.defaultFakePrjname }
     }
 }
 

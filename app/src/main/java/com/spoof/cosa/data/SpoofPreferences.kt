@@ -9,10 +9,19 @@ import com.spoof.cosa.common.SpoofConfig
 class SpoofPreferences(context: Context) {
 
     private val prefs = context.getSharedPreferences(SpoofConfig.prefsName, Context.MODE_PRIVATE)
+    private val legacyPrefs = context.getSharedPreferences(SpoofConfig.prefsNameLegacy, Context.MODE_PRIVATE)
 
     fun getFakePrjname(): String {
         val value = prefs.getString(SpoofConfig.prefsKeyFakePrjname, null)?.trim().orEmpty()
-        return value.ifEmpty { SpoofConfig.defaultFakePrjname }
+        if (value.isNotEmpty()) return value
+
+        val legacyValue = legacyPrefs.getString(SpoofConfig.prefsKeyFakePrjname, null)?.trim().orEmpty()
+        if (legacyValue.isNotEmpty()) {
+            prefs.edit().putString(SpoofConfig.prefsKeyFakePrjname, legacyValue).commit()
+            return legacyValue
+        }
+
+        return SpoofConfig.defaultFakePrjname
     }
 
     fun setFakePrjname(value: String) {
