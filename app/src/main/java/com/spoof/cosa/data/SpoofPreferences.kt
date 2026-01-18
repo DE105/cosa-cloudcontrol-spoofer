@@ -10,6 +10,7 @@ class SpoofPreferences(context: Context) {
 
     private val prefs = context.getSharedPreferences(SpoofConfig.prefsName, Context.MODE_PRIVATE)
     private val legacyPrefs = context.getSharedPreferences(SpoofConfig.prefsNameLegacy, Context.MODE_PRIVATE)
+    private val appDataDir = context.applicationInfo.dataDir
 
     fun getFakePrjname(): String {
         val value = prefs.getString(SpoofConfig.prefsKeyFakePrjname, null)?.trim().orEmpty()
@@ -18,6 +19,7 @@ class SpoofPreferences(context: Context) {
         val legacyValue = legacyPrefs.getString(SpoofConfig.prefsKeyFakePrjname, null)?.trim().orEmpty()
         if (legacyValue.isNotEmpty()) {
             prefs.edit().putString(SpoofConfig.prefsKeyFakePrjname, legacyValue).commit()
+            makePrefsWorldReadable(SpoofConfig.prefsName)
             return legacyValue
         }
 
@@ -37,6 +39,16 @@ class SpoofPreferences(context: Context) {
         }
         editor.commit()
         legacyEditor.commit()
+        makePrefsWorldReadable(SpoofConfig.prefsName)
+        makePrefsWorldReadable(SpoofConfig.prefsNameLegacy)
+    }
+
+    private fun makePrefsWorldReadable(prefsName: String) {
+        val file = java.io.File(appDataDir, "shared_prefs/$prefsName.xml")
+        if (file.exists()) {
+            file.setReadable(true, false)
+            file.setExecutable(true, false)
+        }
     }
 }
 
