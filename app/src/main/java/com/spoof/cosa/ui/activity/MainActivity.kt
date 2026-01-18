@@ -50,6 +50,7 @@ class MainActivity : AppViewsActivity() {
     private val homeComponent by lazy { ComponentName(packageName, "${BuildConfig.APPLICATION_ID}.Home") } 
     private val spoofPreferences by lazy(LazyThreadSafetyMode.NONE) { SpoofPreferences(this) }
     private lateinit var fakePrjnameEditText: android.widget.EditText
+    private lateinit var currentFakePrjnameTextView: android.widget.TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,6 +186,19 @@ class MainActivity : AppViewsActivity() {
                             textColor = colorResource(R.color.white)
                             textSize = 13f
                             text = stringResource(R.string.status_tip)
+                        }
+                        TextView(
+                            lparams = LayoutParams {
+                                topMargin = 2.dp
+                            }
+                        ) {
+                            currentFakePrjnameTextView = this
+                            alpha = 0.8f
+                            isSingleLine = true
+                            ellipsize = TextUtils.TruncateAt.END
+                            textColor = colorResource(R.color.white)
+                            textSize = 13f
+                            text = stringResource(R.string.status_current_fake_prjname, spoofPreferences.getFakePrjname())
                         }
                         TextView(
                             lparams = LayoutParams { 
@@ -331,7 +345,9 @@ class MainActivity : AppViewsActivity() {
                                     setBackgroundResource(R.drawable.bg_green_round)
                                     setOnClickListener {
                                         spoofPreferences.setFakePrjname(fakePrjnameEditText.text?.toString().orEmpty())
-                                        fakePrjnameEditText.setText(spoofPreferences.getFakePrjname())
+                                        val prjname = spoofPreferences.getFakePrjname()
+                                        fakePrjnameEditText.setText(prjname)
+                                        currentFakePrjnameTextView.text = getString(R.string.status_current_fake_prjname, prjname)
                                         Toast.makeText(
                                             this@MainActivity,
                                             getString(R.string.spoof_prjname_saved_tip),

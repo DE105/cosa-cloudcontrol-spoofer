@@ -14,6 +14,7 @@
     <string name="spoof_prjname_title">ro.boot.prjname 伪装值</string>
     <string name="spoof_prjname_hint">留空使用默认值：%1$s</string>
     <string name="spoof_prjname_save">保存</string>
-    <string name="spoof_prjname_saved_tip">已保存，重启游戏助手后生效</string>
+    <string name="spoof_prjname_saved_tip">已保存，重启应用增强服务后生效</string>
     <string name="status_tip">如云控仍异常：先清除应用增强服务数据后再试</string>
+    <string name="status_current_fake_prjname">当前伪装值：%1$s</string>
 </resources>
